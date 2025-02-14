@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const path = require('path');
 const app = express();
 const port = process.env.PORT || 80;
 
@@ -9,15 +10,13 @@ const bucklerRId = process.env.BUCKLER_RID;
 const urlToken = process.env.URL_TOKEN;
 
 const regionName = ["All","Africa","Asia","Europe","South America","North America","Oceania","Specific Region"]
-const region = 0;
-var page = 1;
-var season_type = 1;
-
 const referer = "https://www.streetfighter.com/6/buckler/ranking/league";
-var url =`https://www.streetfighter.com/6/buckler/_next/data/${urlToken}/en/ranking/master.json?page=${page}&season_type=${season_type}&home_category_id=${region}`;
 var myInfo;
 
-async function getCFNData() {
+async function getCFNData(page,region) {
+
+  const url =`https://www.streetfighter.com/6/buckler/_next/data/${urlToken}/en/ranking/master.json?season_type=1&page=${page}&home_category_id=${region}`;
+
   try {
     const response = await fetch(url, {
 
@@ -53,13 +52,25 @@ function processData(data){
   return masterRatingRanking;
 }
 
-app.get('/', async (req, res) => {
-  const cfnData = await getCFNData();
+app.get('/CFN/region/:region/page/:page', async (req, res) => {
+  const requestPage = req.params.page;
+  const requestRegion = req.params.region;
+  const cfnData = await getCFNData(requestPage,requestRegion);
   console.log("Recieved a request for CFN data");
-  console.log(`Request page: ${page} Region: ${regionName[region]}`);
+  console.log(`Request page: ${requestPage} Region: ${regionName[requestRegion]}`);
   console.log("Sending CFN data");
   const processedData = processData(cfnData.pageProps);
   res.send(processedData);
+})
+
+app.get('/', async (req, res) => {
+  // Send our homepage
+  res.sendFile(path.join(__dirname,'index.html'));
+})
+
+app.get('/main.js', async (req, res) => {
+  // Send our main javascript file
+  res.sendFile(path.join(__dirname,'main.js'));
 })
 
 app.listen(port, () => {
