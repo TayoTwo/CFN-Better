@@ -2,16 +2,20 @@ require('dotenv').config();
 
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 80;
 
 const bucklerId = process.env.BUCKLER_ID;
 const bucklerRId = process.env.BUCKLER_RID;
 const urlToken = process.env.URL_TOKEN;
-const league = "All";
-const page = "1";
-const referer = "https://www.streetfighter.com/6/buckler/ranking/league?character_filter=1&character_id=luke&platform=1&user_status=1&home_filter=1&home_category_id=0&home_id=1&league_rank=1&page=1";
 
-var url =`https://www.streetfighter.com/6/buckler/_next/data/${urlToken}/en/ranking/league.json?`;
+const regionName = ["All","Africa","Asia","Europe","South America","North America","Oceania","Specific Region"]
+const region = 0;
+var page = 1;
+var season_type = 1;
+
+const referer = "https://www.streetfighter.com/6/buckler/ranking/league";
+var url =`https://www.streetfighter.com/6/buckler/_next/data/${urlToken}/en/ranking/master.json?page=${page}&season_type=${season_type}&home_category_id=${region}`;
+var myInfo;
 
 async function getCFNData() {
   try {
@@ -36,19 +40,28 @@ async function getCFNData() {
   }
 }
 
-function filterData(data){
-  return data.league_point_ranking;
+function processData(data){
+  
+  // Get our master ratings list
+  var masterRatingRanking = data.master_rating_ranking;
+
+  // Store our info if we want to do something with it later
+  myInfo = masterRatingRanking.my_ranking_info;
+
+  delete masterRatingRanking.my_ranking_info;
+
+  return masterRatingRanking;
 }
 
 app.get('/', async (req, res) => {
   const cfnData = await getCFNData();
   console.log("Recieved a request for CFN data");
-  console.log("Printing CFN data");
-  console.log(cfnData);
-  const filteredData = filterData(cfnData.pageProps);
-  res.send(filteredData);
+  console.log(`Request page: ${page} Region: ${regionName[region]}`);
+  console.log("Sending CFN data");
+  const processedData = processData(cfnData.pageProps);
+  res.send(processedData);
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`App listening on port ${port}`)
 })
