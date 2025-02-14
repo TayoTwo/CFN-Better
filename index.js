@@ -10,19 +10,18 @@ const bucklerRId = process.env.BUCKLER_RID;
 const urlToken = process.env.URL_TOKEN;
 
 const regionName = ["All","Africa","Asia","Europe","South America","North America","Oceania","Specific Region"]
-const referer = "https://www.streetfighter.com/6/buckler/ranking/league";
-var myInfo;
 
-async function getCFNData(page,region) {
+async function getCFNData(region,page) {
 
-  const url =`https://www.streetfighter.com/6/buckler/_next/data/${urlToken}/en/ranking/master.json?season_type=1&page=${page}&home_category_id=${region}`;
+  const url =`https://www.streetfighter.com/6/buckler/_next/data/${urlToken}/en/ranking/master.json?page=${page}&home_category_id=${region}`;
+  const referer = `https://www.streetfighter.com/6/buckler/ranking/master?home_category_id=${region}&page=${page}`;
 
   try {
     const response = await fetch(url, {
 
       method: "GET",
       headers:{
-        "Cookie": `buckler_r_id=${bucklerRId}; buckler_praise_date=1739206388785; buckler_id=${bucklerId}`,
+        "Cookie": `buckler_id=${bucklerId}; buckler_praise_date=1739566722445;`,
         "Referer": referer,
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0"
       }
@@ -39,13 +38,10 @@ async function getCFNData(page,region) {
   }
 }
 
-function processData(data){
+function filterData(data){
   
   // Get our master ratings list
-  var masterRatingRanking = data.master_rating_ranking;
-
-  // Store our info if we want to do something with it later
-  myInfo = masterRatingRanking.my_ranking_info;
+  var masterRatingRanking = data.pageProps.master_rating_ranking;
 
   delete masterRatingRanking.my_ranking_info;
 
@@ -53,14 +49,21 @@ function processData(data){
 }
 
 app.get('/CFN/region/:region/page/:page', async (req, res) => {
-  const requestPage = req.params.page;
-  const requestRegion = req.params.region;
-  const cfnData = await getCFNData(requestPage,requestRegion);
+
+  const cfnData = await getCFNData(req.params.region,req.params.page);
+
   console.log("Recieved a request for CFN data");
-  console.log(`Request page: ${requestPage} Region: ${regionName[requestRegion]}`);
+  console.log(`Request page: ${req.params.page} Region: ${regionName[req.params.region]}`);
   console.log("Sending CFN data");
-  const processedData = processData(cfnData.pageProps);
-  res.send(processedData);
+
+  const filteredData = filterData(cfnData);
+
+  res.send(filteredData);
+})
+
+app.get('/fighters', async (req, res) => {
+  // Send our homepage
+  res.sendFile(path.join(dirname,'fighters.html'));
 })
 
 app.get('/', async (req, res) => {
