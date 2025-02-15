@@ -84,11 +84,11 @@ async function createWebpage(region,page,playercount){
     // add the text node to the newly created div
     //fighterDiv.appendChild(fighterRank);
 
-    // add the text node to the newly created div
-    fighterDiv.appendChild(fighterText);
-
     // add the image node to the newly created div
     fighterDiv.appendChild(fighterImg);
+
+    // add the text node to the newly created div
+    fighterDiv.appendChild(fighterText);
 
     fighterDiv.className = "fighter";
 
