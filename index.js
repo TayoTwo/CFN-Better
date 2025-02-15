@@ -54,6 +54,18 @@ function filterData(data){
   return fighterList;
 }
 
+function clamp(number, minimum, maximum) {
+	if (number < minimum) {
+		return minimum;
+	}
+
+	if (number > maximum) {
+		return maximum;
+	}
+
+	return number;
+}
+
 app.get('/leaderboard/region/:region/page/:page', async (req, res) => {
 
   console.log("Recieved a request for CFN data");
@@ -75,7 +87,7 @@ app.get('/leaderboard/region/:region/playercount/:playercount', async (req, res)
   console.log(`Region: ${regionName[req.params.region]} Player Count: ${req.params.playercount}`);
   console.log("Getting data from CFN...");
 
-  const pageRequests = Math.ceil(req.params.playercount / 20);
+  const pageRequests = clamp(Math.ceil(req.params.playercount / 20),0,500);
   var requestDataArray;
 
   for(let i = 1; i <= pageRequests;i++){
