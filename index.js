@@ -56,10 +56,12 @@ function filterData(data){
 
 app.get('/leaderboard/region/:region/page/:page', async (req, res) => {
 
-  const cfnData = await getCFNData(req.params.region,req.params.page);
-
   console.log("Recieved a request for CFN data");
   console.log(`Request page: ${req.params.page} Region: ${regionName[req.params.region]}`);
+  console.log("Getting data from CFN...");
+
+  const cfnData = await getCFNData(req.params.region,req.params.page);
+
   console.log("Sending CFN data");
 
   const filteredData = filterData(cfnData);
@@ -68,6 +70,10 @@ app.get('/leaderboard/region/:region/page/:page', async (req, res) => {
 })
 
 app.get('/leaderboard/region/:region/playercount/:playercount', async (req, res) => {
+
+  console.log("Recieved a request for CFN data");
+  console.log(`Region: ${regionName[req.params.region]} Player Count: ${req.params.playercount}`);
+  console.log("Getting data from CFN...");
 
   const pageRequests = Math.ceil(req.params.playercount / 20);
   var requestDataArray;
@@ -86,10 +92,7 @@ app.get('/leaderboard/region/:region/playercount/:playercount', async (req, res)
     }
   }
 
-  console.log("Recieved a request for CFN data");
-  console.log(`Player Count: ${regionName[req.params.playercount]}`);
   console.log("Sending CFN data");
-  console.log(requestDataArray);
 
   res.send(requestDataArray);
 })

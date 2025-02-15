@@ -52,7 +52,7 @@ async function createWebpage(region,page,playercount){
   console.log(page == "-1");
 
   const filteredData = (page == "-1") ? await requestCFNPlayers(region,playercount): await requestCFNDataPage(region,page);
-  console.log(filteredData);
+  //console.log(filteredData);
 
   document.getElementById("fighters").innerHTML = "";
 
@@ -60,40 +60,47 @@ async function createWebpage(region,page,playercount){
   for(let i = 0; i < playercount;i++){
 
     const item = filteredData[i];
-    const fighterName = item.fighter_banner_info.personal_info.fighter_id;
-    const rank = i +1;
-    const rating = item.rating;
-    const characterToolName = item.character_tool_name;
-    const characterImageUrl = `https://www.streetfighter.com/6/buckler/assets/images/material/character/character_${characterToolName}_l.png`
 
-    const currentDiv = document.getElementById("fighters");
-    const fighterDiv = document.createElement("div");
+    if(item != null){
 
-    /*var fighterRank = document.createElement("span");
-    fighterRank.textContent = ``;
-    fighterRank.className = "fighterRank";*/
+      const fighterName = item.fighter_banner_info.personal_info.fighter_id;
+      const rank = i +1;
+      const rating = item.rating;
+      const characterToolName = item.character_tool_name;
+      const characterImageUrl = `https://www.streetfighter.com/6/buckler/assets/images/material/character/character_${characterToolName}_l.png`
 
-    var fighterText = document.createElement("span");
-    fighterText.textContent = `#${rank} - ${fighterName} | ${rating} MR`;
-    fighterText.className = "fighterText";
+      const currentDiv = document.getElementById("fighters");
+      const fighterDiv = document.createElement("div");
 
-    var fighterImg = document.createElement("img");
-    fighterImg.src = characterImageUrl;
-    fighterImg.className = "fighterImg";
+      /*var fighterRank = document.createElement("span");
+      fighterRank.textContent = ``;
+      fighterRank.className = "fighterRank";*/
 
-    // add the text node to the newly created div
-    //fighterDiv.appendChild(fighterRank);
+      var fighterText = document.createElement("span");
+      fighterText.textContent = `#${rank} - ${fighterName} | ${rating} MR`;
+      fighterText.className = "fighterText";
 
-    // add the image node to the newly created div
-    fighterDiv.appendChild(fighterImg);
+      var fighterImg = document.createElement("img");
+      fighterImg.src = characterImageUrl;
+      fighterImg.className = "fighterImg";
 
-    // add the text node to the newly created div
-    fighterDiv.appendChild(fighterText);
+      // add the text node to the newly created div
+      //fighterDiv.appendChild(fighterRank);
 
-    fighterDiv.className = "fighter";
+      // add the image node to the newly created div
+      fighterDiv.appendChild(fighterImg);
 
-    // add the newly created element and its content into the DOM
-    currentDiv.appendChild(fighterDiv);
+      // add the text node to the newly created div
+      fighterDiv.appendChild(fighterText);
+
+      fighterDiv.className = "fighter";
+
+      // add the newly created element and its content into the DOM
+      currentDiv.appendChild(fighterDiv);
+    }
+    else {
+      return;
+    }
   }
 }
 
