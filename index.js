@@ -109,6 +109,11 @@ app.get('/leaderboard/region/:region/playercount/:playercount', async (req, res)
   res.send(requestDataArray);
 })
 
+app.get('/characterinfo', async (req, res) => {
+  // Send our homepage
+  res.sendFile(path.join(__dirname,'characterinfo.html'));
+})
+
 app.get('/leaderboard', async (req, res) => {
   // Send our homepage
   res.sendFile(path.join(__dirname,'leaderboard.html'));
@@ -117,6 +122,11 @@ app.get('/leaderboard', async (req, res) => {
 app.get('/', async (req, res) => {
   // Send our homepage
   res.sendFile(path.join(__dirname,'index.html'));
+})
+
+app.get('/characterinfo.js', async (req, res) => {
+  // Send our main javascript file
+  res.sendFile(path.join(__dirname,'characterinfo.js'));
 })
 
 app.get('/leaderboard.js', async (req, res) => {
