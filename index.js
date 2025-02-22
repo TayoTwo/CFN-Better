@@ -21,16 +21,41 @@ async function getCFNData(region,page) {
   else {
     homeFilter = 2;
   }
-  const url =`https://www.streetfighter.com/6/buckler/_next/data/${urlToken}/en/ranking/master.json?home_category_id=${region}&page=${page}&home_filter=${homeFilter}`;
+  const playerDataUrl =`https://www.streetfighter.com/6/buckler/_next/data/${urlToken}/en/ranking/master.json?home_category_id=${region}&page=${page}&home_filter=${homeFilter}`;
   const referer = `https://www.streetfighter.com/6/buckler/ranking/master?home_category_id=${region}&page=${page}&home_filter=${homeFilter}`;
 
   try {
-    const response = await fetch(url, {
+    const response = await fetch(playerDataUrl, {
+
+      method: "GET",
+      headers:{
+        "Cookie": `buckler_id=${bucklerId}; buckler_praise_date=1740178799166;`,
+        "Referer": referer,
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0",
+      }
+    }
+    );
+    if (!response.ok) {
+      return `Response status: ${response.status}`;
+    }
+
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    return error.message;
+  }
+}
+
+async function getCharacterData(timePeriod){
+
+  const characterDataUrl = `https://www.streetfighter.com/6/buckler/api/en/stats/usagerate/${timePeriod}`;
+
+  try {
+    const response = await fetch(characterDataUrl, {
 
       method: "GET",
       headers:{
         "Cookie": `buckler_id=${bucklerId}; buckler_praise_date=1739566722445;`,
-        "Referer": referer,
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0",
       }
     }
@@ -65,6 +90,16 @@ function clamp(number, minimum, maximum) {
 
 	return number;
 }
+
+app.get('/characterdata/:character', async (req, res) => {
+
+  res.sendFile(path.join(__dirname + "/CharacterData/Characters",req.params.character + ".json"));
+})
+
+app.get('/characterdata/:timeperiod', async (req, res) => {
+
+  res.sendFile(path.join(__dirname + "/CharacterData/",req.params.timeperiod + ".json"));
+})
 
 app.get('/leaderboard/region/:region/page/:page', async (req, res) => {
 
@@ -109,9 +144,11 @@ app.get('/leaderboard/region/:region/playercount/:playercount', async (req, res)
   res.send(requestDataArray);
 })
 
-app.get('/characterinfo', async (req, res) => {
+app.get('/characterdata', async (req, res) => {
   // Send our homepage
-  res.sendFile(path.join(__dirname,'characterinfo.html'));
+  //res.sendFile(path.join(__dirname,'characterinfo.html'));
+
+  res.sendFile(path.join(__dirname,'characterdata.html'));
 })
 
 app.get('/leaderboard', async (req, res) => {
@@ -124,9 +161,9 @@ app.get('/', async (req, res) => {
   res.sendFile(path.join(__dirname,'index.html'));
 })
 
-app.get('/characterinfo.js', async (req, res) => {
+app.get('/characterdata.js', async (req, res) => {
   // Send our main javascript file
-  res.sendFile(path.join(__dirname,'characterinfo.js'));
+  res.sendFile(path.join(__dirname,'characterdata.js'));
 })
 
 app.get('/leaderboard.js', async (req, res) => {

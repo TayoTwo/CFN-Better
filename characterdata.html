@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>CFN BETTER</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <h1>Character Info</h1>
+        <div id="fighterDataSelect" class="fighterDataSelect">
+            <img id="fighterImg" src="" alt="Character">
+            <select id="characterSelect" name="characterSelector" id="character" onchange="onSelectOption();">
+                <option value="0">Aki</option>
+                <option value="1">Blanka</option>
+                <option value="2">Cammy</option>
+                <option value="3">Chun Li</option>
+
+                <option value="4">Dee Jay</option>
+                <option value="5">Dhalsim</option>
+                <option value="6">Ed</option>
+                <option value="7">Gouki</option>
+
+                <option value="8">Guile</option>
+                <option value="9">Honda</option>
+                <option value="10">Jamie</option>
+                <option value="11">JP</option>
+
+                <option value="12">Juri</option>
+                <option value="13">Ken</option>
+                <option value="14">Kimberly</option>
+                <option value="15">Lily</option>
+
+                <option value="16">Luke</option>
+                <option value="17">Manon</option>
+                <option value="18">Marisa</option>
+                <option value="19">Rashid</option>
+
+                <option value="20">Ryu</option>
+                <option value="21">Terry</option>
+                <option value="22">Vega</option>
+                <option value="23">Zangief</option>
+            </select>
+        </div>
+        <div class="characterDataChart" id="characterDataChart">
+        <canvas id="dataChartCanvas" style="width:100%;max-width:700px"></canvas>
+        </div>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+        <script type="text/javascript" src="./characterdata.js">
+        </script>
+        <script>
+            onSelectOption();
+        </script>
+    </body>
+</html>
