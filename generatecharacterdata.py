@@ -66,6 +66,8 @@ for character in CharacterToolNameArray:
     filePath = TimePeriodPath + file
 
     with open(filePath) as f:
+      
+      fileHasCharacter = False
       timePeriodJson = json.load(f)
       
       timePeriodData = timePeriodJson["usagerateData"]
@@ -77,9 +79,15 @@ for character in CharacterToolNameArray:
       for dataEntry in masterRateData["val"]:
          
         if dataEntry["character_tool_name"] == character:
+           fileHasCharacter = True
            characterData.update({
-                                file.strip('.json'): dataEntry["play_rate"]
-                                })
+                              file.strip('.json'): dataEntry["play_rate"]
+                              })
+      if fileHasCharacter is False:
+        characterData.update({
+                              file.strip('.json'): 0
+                              })
+
 
   AllCharacterData.update({
     character: characterData
