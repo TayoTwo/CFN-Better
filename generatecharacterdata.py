@@ -9,6 +9,7 @@ load_dotenv()
 DataPath = "./CharacterData/"
 TimePeriodPath = DataPath + "TimePeriods/"
 CharacterPath = DataPath + "Characters/"
+AllCharacterPath = DataPath + "Characters/all.json"
 ControlType = 0
 
 # Delete anything in the folder already
@@ -37,6 +38,7 @@ Headers = {
 
 TimePeriodArray = ["202306","202307","202308","202309","202310","202311","202312","202401","202402","202403","202404","202405","202406","202407","202408","202409","202410","202411","202412","202501"]
 CharacterToolNameArray = ["ryu","luke","kimberly","chunli","manon","zangief","jp","dhalsim","cammy","ken","deejay","lily","aki","rashid","blanka","juri","marisa","guile","ed","honda","jamie","gouki","vega","terry"]
+AllCharacterData = {}
 
 for TimePeriod in TimePeriodArray:
 
@@ -78,8 +80,14 @@ for character in CharacterToolNameArray:
            characterData.update({
                                 file.strip('.json'): dataEntry["play_rate"]
                                 })
-    
+
+  AllCharacterData.update({
+    character: characterData
+  })
 
   with open(characterPath,"x") as f:
       json.dump(characterData,f)
+
+with open(AllCharacterPath,"x") as f:
+    json.dump(AllCharacterData,f)
    
