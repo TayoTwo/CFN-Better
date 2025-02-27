@@ -1,5 +1,6 @@
 const characterNames = ["all","aki","blanka","cammy","chunli","deejay","dhalsim","ed","gouki","guile","honda","jamie","jp","juri","ken","kimberly","lily","luke","manon","marisa","rashid","ryu","terry","vega","zangief"]
-const timePeriodArray = ["202306","202307","202308","202309","202310","202311","202312","202401","202402","202403","202404","202405","202406","202407","202408","202409","202410","202411","202412","202501"]
+
+const timePeriodArray = ["20230601","20230701","20230801","20230901","20231001","20231101","20231201","20240101","20240201","20240301","20240401","20240501","20240601","20240701","20240801","20240901","20241001","20241101","20241201","20250101"]
 
 document.getElementById("characterSelect").onchange = onSelectOption;
 const characterImg = document.getElementById("fighterImg");
@@ -63,7 +64,7 @@ async function GenerateCharacterChart(characterIndex){
       labels: timePeriodValues,
       datasets: [{
         fill: false,
-        lineTension: 0,
+        lineTension: 0.1,
         backgroundColor: "rgba(0,0,255,1.0)",
         borderColor: "rgba(0,0,255,0.1)",
         data: playRateValues
@@ -100,7 +101,7 @@ async function GenerateAllCharactersChart()
       data : Object.values(characterData[character]),
       backgroundColor: randomColor,
       borderColor: randomColor,
-      lineTension: 0,
+      tension: 0.1,
       fill: false,
     }
 

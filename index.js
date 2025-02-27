@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const path = require('path');
+var fs = require('fs');
 const app = express();
 const port = process.env.PORT || 80;
 
@@ -46,39 +47,6 @@ async function getCFNData(region,page) {
   }
 }
 
-async function getCharacterData(timePeriod){
-
-  const characterDataUrl = `https://www.streetfighter.com/6/buckler/api/en/stats/usagerate/${timePeriod}`;
-
-  try {
-    const response = await fetch(characterDataUrl, {
-
-      method: "GET",
-      headers:{
-        "Cookie": `buckler_id=${bucklerId}; buckler_praise_date=1739566722445;`,
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0",
-      }
-    }
-    );
-    if (!response.ok) {
-      return `Response status: ${response.status}`;
-    }
-
-    const json = await response.json();
-    return json;
-  } catch (error) {
-    return error.message;
-  }
-}
-
-function filterData(data){
-
-  // Get our master ratings list
-  var fighterList = data.pageProps.master_rating_ranking.ranking_fighter_list;
-
-  return fighterList;
-}
-
 function clamp(number, minimum, maximum) {
 	if (number < minimum) {
 		return minimum;
@@ -93,12 +61,17 @@ function clamp(number, minimum, maximum) {
 
 app.get('/characterdata/:character', async (req, res) => {
 
-  res.sendFile(path.join(__dirname + "/CharacterData/Characters",req.params.character + ".json"));
-})
+  var obj = JSON.parse(fs.readFileSync('./CharacterData/characterdata.json', 'utf8'));
 
-app.get('/characterdata/:timeperiod', async (req, res) => {
-
-  res.sendFile(path.join(__dirname + "/CharacterData/",req.params.timeperiod + ".json"));
+  if(req.params.character == "all")
+  {
+    res.sendFile(path.join(__dirname + "/CharacterData/", "characterdata.json"));
+  }
+  else 
+  {
+    characterObj = obj[req.params.character];
+    res.send(characterObj);
+  }
 })
 
 app.get('/leaderboard/region/:region/page/:page', async (req, res) => {
@@ -111,7 +84,7 @@ app.get('/leaderboard/region/:region/page/:page', async (req, res) => {
 
   console.log("Sending CFN data");
 
-  const filteredData = filterData(cfnData);
+  const filteredData = cfnData.pageProps.master_rating_ranking.ranking_fighter_list;
 
   res.send(filteredData);
 })
@@ -127,7 +100,7 @@ app.get('/leaderboard/region/:region/playercount/:playercount', async (req, res)
 
   for(let i = 1; i <= pageRequests;i++){
     const pageData = await getCFNData(req.params.region,i);
-    const filteredData = filterData(pageData);
+    const filteredData = pageData.pageProps.master_rating_ranking.ranking_fighter_list;
 
     if(requestDataArray != null){
       for (var key in filteredData) {
