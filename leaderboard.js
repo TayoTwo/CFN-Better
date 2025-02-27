@@ -48,11 +48,7 @@ async function createWebpage(region,page,playercount){
 
   document.getElementById("fighters").innerHTML = "Loading...";
 
-  console.log(page);
-  console.log(page == "-1");
-
-  const filteredData = (page == "-1") ? await requestCFNPlayers(region,playercount): await requestCFNDataPage(region,page);
-  //console.log(filteredData);
+  const filteredData = await requestCFNPlayers(region,playercount);
 
   document.getElementById("fighters").innerHTML = "";
 
@@ -60,6 +56,8 @@ async function createWebpage(region,page,playercount){
   for(let i = 0; i < playercount;i++){
 
     const item = filteredData[i];
+
+    console.log(filteredData);
 
     if(item != null){
 

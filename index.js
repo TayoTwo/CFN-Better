@@ -12,6 +12,7 @@ const urlToken = process.env.URL_TOKEN;
 
 const regionName = ["All","Africa","Asia","Europe","South America","North America","Oceania","Specific Region"]
 
+// https://www.streetfighter.com/6/buckler/_next/data/gx8EV1nUmBUeAOVLtM_qu/en/ranking/master.json?home_category_id=0&page=1&home_filter=1
 async function getCFNData(region,page) {
 
   // Not sure what home filter is but use 1 if the region is all, otherwise use 2
