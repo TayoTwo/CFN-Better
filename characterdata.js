@@ -146,9 +146,6 @@ async function GenerateAllCharactersChart(dataType)
       break;
   }
 
-  console.log("Patch data");
-  console.log(patchData);
-
   console.log("Character data");
   console.log(characterData);
 
@@ -159,18 +156,6 @@ async function GenerateAllCharactersChart(dataType)
 
   const characterImageUrl = "https://www.streetfighter.com/6/buckler/assets/images/material/character/character_random_l.png"
   characterImg.src = characterImageUrl;
-
-  const patchDatesDataset = {
-    label : "Patches",
-    data : Object.values(patchData),
-    backgroundColor: "#000000",
-    borderColor: "#000000",
-    tension: 0.1,
-    fill: false,
-  }
-
-  console.log("Patch dates dataset");
-  console.log(patchDatesDataset);
 
   var dataSets = [];
 
