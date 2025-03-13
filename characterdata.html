@@ -10,7 +10,7 @@
         <h1>Character Info</h1>
         <div id="fighterDataSelect" class="fighterDataSelect">
             <img id="fighterImg" src="" alt="Character">
-            <select id="characterSelect" name="characterSelector" id="character" onchange="onSelectOption();">
+            <select id="characterSelect" name="characterSelector" id="character" onchange="onSelectCharacterOption();">
                 <option value="0">All</option>
                 <option value="1">Aki</option>
                 <option value="2">Blanka</option>
@@ -33,14 +33,20 @@
                 <option value="16">Lily</option>
 
                 <option value="17">Luke</option>
-                <option value="18">Manon</option>
-                <option value="19">Marisa</option>
-                <option value="20">Rashid</option>
+                <option value="18">Mai</option>
+                <option value="19">Manon</option>
+                <option value="20">Marisa</option>
+                <option value="21">Rashid</option>
 
-                <option value="21">Ryu</option>
-                <option value="22">Terry</option>
-                <option value="23">Vega</option>
-                <option value="24">Zangief</option>
+                <option value="22">Ryu</option>
+                <option value="23">Terry</option>
+                <option value="24">Vega</option>
+                <option value="25">Zangief</option>
+            </select>
+            <select id="dataSelect" name="dataSelector" id="dataType" onchange="onSelectCharacterOption();">
+                <option value="0">Usage</option>
+                <option value="1">Winrates</option>
+                <option value="2">Both</option>
             </select>
         </div>
         <div class="characterDataChart" id="characterDataChart">
@@ -50,7 +56,7 @@
         <script type="text/javascript" src="./characterdata.js">
         </script>
         <script>
-            onSelectOption();
+            onSelectCharacterOption();
         </script>
     </body>
 </html>

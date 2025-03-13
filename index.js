@@ -60,13 +60,28 @@ function clamp(number, minimum, maximum) {
 	return number;
 }
 
-app.get('/characterdata/:character', async (req, res) => {
+app.get('/characterdata/usage/:character', async (req, res) => {
 
-  var obj = JSON.parse(fs.readFileSync('./CharacterData/characterdata.json', 'utf8'));
+  var obj = JSON.parse(fs.readFileSync('./CharacterData/characterusage.json', 'utf8'));
 
   if(req.params.character == "all")
   {
-    res.sendFile(path.join(__dirname + "/CharacterData/", "characterdata.json"));
+    res.sendFile(path.join(__dirname + "/CharacterData/", "characterusage.json"));
+  }
+  else 
+  {
+    characterObj = obj[req.params.character];
+    res.send(characterObj);
+  }
+})
+
+app.get('/characterdata/winrate/:character', async (req, res) => {
+
+  var obj = JSON.parse(fs.readFileSync('./CharacterData/characterwinrate.json', 'utf8'));
+
+  if(req.params.character == "all")
+  {
+    res.sendFile(path.join(__dirname + "/CharacterData/", "characterwinrate.json"));
   }
   else 
   {
@@ -101,15 +116,19 @@ app.get('/leaderboard/region/:region/playercount/:playercount', async (req, res)
 
   for(let i = 1; i <= pageRequests;i++){
     const pageData = await getCFNData(req.params.region,i);
-    const filteredData = pageData.pageProps.master_rating_ranking.ranking_fighter_list;
 
-    if(requestDataArray != null){
-      for (var key in filteredData) {
-        requestDataArray[requestDataArray.length] = filteredData[key];
+    if(pageData.pageProps.master_rating_ranking != null){
+
+      const filteredData = pageData.pageProps.master_rating_ranking.ranking_fighter_list;
+
+      if(requestDataArray != null){
+        for (var key in filteredData) {
+          requestDataArray[requestDataArray.length] = filteredData[key];
+        }
       }
-    }
-    else {
-      requestDataArray = filteredData;
+      else {
+        requestDataArray = filteredData;
+      }
     }
   }
 
