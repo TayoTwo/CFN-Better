@@ -8,7 +8,28 @@ document.getElementById("dataSelect").onchange = onSelectCharacterOption;
 const characterImg = document.getElementById("fighterImg");
 const canvas = document.getElementById("dataChartCanvas");
 
-var currentChart;
+var CurrentChart;
+
+async function RequestPatchDateData(){
+
+  const requestURL = document.URL.replace("characterdata","") + "patchdates.json";
+  console.log(requestURL);
+
+  try {
+    const response = await fetch(requestURL, {
+      method: "GET",
+    }
+    );
+    if (!response.ok) {
+      return `Response status: ${response.status}`;
+    }
+
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    return error.message;
+  }
+}
 
 async function RequestCharacterUsageData(character){
 
@@ -84,15 +105,15 @@ async function GenerateCharacterChart(dataType,characterIndex){
   console.log(timePeriodValues);
   console.log(playRateValues);
 
-  if(currentChart != null){
+  if(CurrentChart != null){
 
-    currentChart.destroy();
+    CurrentChart.destroy();
   }
 
   const characterImageUrl = `https://www.streetfighter.com/6/buckler/assets/images/material/character/character_${characterToolName}_l.png`
   characterImg.src = characterImageUrl;
 
-  currentChart = new Chart("dataChartCanvas", {
+  CurrentChart = new Chart("dataChartCanvas", {
     type: "line",
     data: {
       labels: timePeriodValues,
@@ -125,15 +146,31 @@ async function GenerateAllCharactersChart(dataType)
       break;
   }
 
+  console.log("Patch data");
+  console.log(patchData);
+
+  console.log("Character data");
   console.log(characterData);
 
-  if(currentChart != null){
+  if(CurrentChart != null){
 
-    currentChart.destroy();
+    CurrentChart.destroy();
   }
 
   const characterImageUrl = "https://www.streetfighter.com/6/buckler/assets/images/material/character/character_random_l.png"
   characterImg.src = characterImageUrl;
+
+  const patchDatesDataset = {
+    label : "Patches",
+    data : Object.values(patchData),
+    backgroundColor: "#000000",
+    borderColor: "#000000",
+    tension: 0.1,
+    fill: false,
+  }
+
+  console.log("Patch dates dataset");
+  console.log(patchDatesDataset);
 
   var dataSets = [];
 
@@ -141,7 +178,7 @@ async function GenerateAllCharactersChart(dataType)
   {
     const randomColor = "#" + Math.floor(Math.random()*16777215).toString(16);
 
-    dataSet = {
+    var dataSet = {
       label : character,
       data : Object.values(characterData[character]),
       backgroundColor: randomColor,
@@ -153,9 +190,10 @@ async function GenerateAllCharactersChart(dataType)
     dataSets.push(dataSet);
   }
 
+  console.log("Datasets");
   console.log(dataSets);
 
-  currentChart = new Chart("dataChartCanvas", {
+  CurrentChart = new Chart("dataChartCanvas", {
     type: "line",
     data: {
       labels: timePeriodArray,
